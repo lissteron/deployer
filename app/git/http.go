@@ -4,15 +4,12 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
-	"encoding/json"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
 
 	"github.com/spf13/viper"
-
-	"github.com/google/go-github/github"
 )
 
 const (
@@ -47,14 +44,6 @@ func WebhookRequest(logger *log.Logger, w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	var event github.Event
-
-	if err := json.Unmarshal(body, &event); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	logger.Println(event.GetRepo().GetCloneURL())
 }
 
 func checkSign(logger *log.Logger, body []byte, sign string) bool {

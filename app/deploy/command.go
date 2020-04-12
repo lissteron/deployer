@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os/exec"
+	"strings"
 )
 
 func pull(logger *log.Logger, path string) (err error) {
@@ -18,4 +19,8 @@ func pull(logger *log.Logger, path string) (err error) {
 	}
 
 	return
+}
+
+func getBranch(str string) string {
+	return strings.TrimPrefix(str, "refs/heads/")
 }

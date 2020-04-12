@@ -9,7 +9,7 @@ import (
 )
 
 func ProcessPush(logger *log.Logger, event *github.PushEvent) {
-	if !strings.Contains(event.Ref, viper.GetString("ACCEPTED_REPOSITORY")) {
+	if !strings.Contains(viper.GetString("ACCEPTED_REPOSITORY"), getBranch(event.Ref)) {
 		return
 	}
 

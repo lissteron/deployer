@@ -2,7 +2,7 @@ package git
 
 import (
 	"crypto/hmac"
-	"crypto/sha256"
+	"crypto/sha1"
 	"encoding/hex"
 	"io/ioutil"
 	"log"
@@ -66,16 +66,16 @@ func WebhookRequest(logger *log.Logger, w http.ResponseWriter, r *http.Request) 
 }
 
 func checkSign(logger *log.Logger, body []byte, sign string) bool {
-	h := hmac.New(sha256.New, []byte(viper.GetString("HMAC_SECRET")))
+	h := hmac.New(sha1.New, []byte(viper.GetString("HMAC_SECRET")))
 
 	if _, err := h.Write(body); err != nil {
 		logger.Println("[error]", err)
 		return false
 	}
 
-	sig := hex.EncodeToString(h.Sum(nil))
+	sig := "sha1=" + hex.EncodeToString(h.Sum(nil))
 
 	logger.Println("[debug]", sign, sig)
 
-	return !strings.EqualFold(sign, sig)
+	return strings.EqualFold(sign, sig)
 }

@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/lissteron/deployer/app/deploy"
+	"github.com/lissteron/deployer/pkg/github"
 	"github.com/spf13/viper"
 )
 
@@ -44,6 +46,23 @@ func WebhookRequest(logger *log.Logger, w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	go func() {
+		switch r.Header.Get("X-GitHub-Event") {
+		case "push":
+			event := new(github.PushEvent)
+
+			if err := event.UnmarshalJSON(body); err != nil {
+				logger.Println("[error]", err)
+				w.WriteHeader(http.StatusBadRequest)
+
+				return
+			}
+
+			deploy.ProcessPush(logger, event)
+		}
+	}()
+
+	w.WriteHeader(http.StatusOK)
 }
 
 func checkSign(logger *log.Logger, body []byte, sign string) bool {

@@ -32,6 +32,10 @@ func ProcessPush(logger *log.Logger, event *github.PushEvent) {
 			files = append(files, commit.Removed...)
 			files = append(files, commit.Modified...)
 
+			if viper.GetBool("DEBUG") {
+				logger.Println("[debug]", "files", files)
+			}
+
 			for _, fn := range files {
 				if strings.Contains(fn, "go") {
 					needRestart = true
@@ -41,6 +45,10 @@ func ProcessPush(logger *log.Logger, event *github.PushEvent) {
 		}
 
 		if needRestart {
+			if viper.GetBool("DEBUG") {
+				logger.Println("[debug]", "go restart", viper.GetString("GO_TOUCH"))
+			}
+
 			b, err := exec.Command("/bin/sh", "-c", fmt.Sprintf("touch %s", viper.GetString("GO_TOUCH"))).CombinedOutput()
 			if err != nil {
 				logger.Println("[error]", err)

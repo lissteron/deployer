@@ -75,7 +75,9 @@ func checkSign(logger *log.Logger, body []byte, sign string) bool {
 
 	sig := "sha1=" + hex.EncodeToString(h.Sum(nil))
 
-	logger.Println("[debug]", sign, sig)
+	if viper.GetBool("DEBUG") {
+		logger.Println("[debug]", sign, sig)
+	}
 
 	return strings.EqualFold(sign, sig)
 }

@@ -73,5 +73,9 @@ func checkSign(logger *log.Logger, body []byte, sign string) bool {
 		return false
 	}
 
-	return !strings.EqualFold(sign, hex.EncodeToString(h.Sum(nil)))
+	sig := hex.EncodeToString(h.Sum(nil))
+
+	logger.Println("[debug]", sign, sig)
+
+	return !strings.EqualFold(sign, sig)
 }

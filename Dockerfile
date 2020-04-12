@@ -1,5 +1,5 @@
 FROM golang:1.14-alpine as builder
-RUN apk update && apk add --no-cache git ca-certificates
+RUN apk update && apk add --no-cache git openssh-client
 
 WORKDIR /src
 COPY ./ /src

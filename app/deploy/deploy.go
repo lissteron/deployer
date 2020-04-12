@@ -1,6 +1,7 @@
 package deploy
 
 import (
+	"fmt"
 	"log"
 	"os/exec"
 	"strings"
@@ -40,7 +41,7 @@ func ProcessPush(logger *log.Logger, event *github.PushEvent) {
 		}
 
 		if needRestart {
-			b, err := exec.Command("/bin/sh", "-c", viper.GetString("GO_TOUCH")).CombinedOutput()
+			b, err := exec.Command("/bin/sh", "-c", fmt.Sprintf("touch %s", viper.GetString("GO_TOUCH"))).CombinedOutput()
 			if err != nil {
 				logger.Println("[error]", err)
 				logger.Println(string(b))
